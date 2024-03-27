@@ -44,6 +44,8 @@ while True:
 
             else:
                 print('Valor Ok')
+                #Grava a operaçõa na vaiável Extrato
+                extrato += (f'\n(+) Depósito R$ {valor}\n') 
                 break
 
     elif opcao == "s":
