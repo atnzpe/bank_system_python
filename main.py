@@ -26,11 +26,11 @@ while True:
     if opcao == "d":
         print("Deposito")
         while True:
-            msg = input('Digite o Valor do deposito: ')
+            msg = input('Digite o Valor a ser depositado: ')
             valor = float(msg)
 
             if valor <= 0:
-                print('Valor digitado Menor ou Igual a Zero')
+                print('Valor digitado Menor ou Igual a Zero.Por favor, tente novamente!')
                 print(msg)
             else:
                 print('Valor Ok')
