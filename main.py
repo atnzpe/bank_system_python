@@ -25,17 +25,27 @@ while True:
 
     if opcao == "d":
         print("Deposito")
+        t = 0
         while True:
             msg = input('Digite o Valor a ser depositado: ')
             valor = float(msg)
 
             if valor <= 0:
+                t = t + 1
                 print('Valor digitado Menor ou Igual a Zero.Por favor, tente novamente!')
                 print(msg)
+
+                print(f'Numero de Tentaivas:{t=}')
+
+                if t == 3:
+                    print(
+                        '\nVocê digitou 3 Vezes seguidas um valor Zero ou Negativo!\nPor favor tente novamente!')
+                    break
+
             else:
                 print('Valor Ok')
                 break
-            
+
     elif opcao == "s":
         print("Saque")
     elif opcao == "e":
