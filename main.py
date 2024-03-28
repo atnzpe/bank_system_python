@@ -46,7 +46,8 @@ while True:
                     break
 
             else:
-                print(f'Deposito no valor de R$ {valor_digitado_deposito:,.2f} foi realizado com sucesso!')
+                print(
+                    f'Deposito no valor de R$ {valor_digitado_deposito:,.2f} foi realizado com sucesso!')
                 # Adicionar o Valor Digitado ao Saldo
                 saldo += valor_digitado_deposito
                 # Grava a operaçõa na vaiável Extrato
@@ -55,7 +56,7 @@ while True:
 
     elif opcao == "s":
         print("Saque")
-        
+
     elif opcao == "e":
         print("=== Extrato ===")
         agora = datetime.datetime.now()
@@ -67,10 +68,10 @@ while True:
             print('Não foram realizadas movimentações.')
             print('----------')
         else:
-            print('--------------------')            
-            print(extrato,f'\nSaldo Atual: R$ {saldo:,.2f}')
             print('--------------------')
-            
+            print(extrato, f'\nSaldo Atual: R$ {saldo:,.2f}')
+            print('--------------------')
+
     elif opcao == "q":
         print("Sair")
         break
