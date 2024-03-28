@@ -1,3 +1,5 @@
+import datetime
+
 # Imprime Mensagem de Boas Vindas
 
 # Imprime perguntando o que o cliente deseja fazer
@@ -53,8 +55,22 @@ while True:
 
     elif opcao == "s":
         print("Saque")
+        
     elif opcao == "e":
-        print("Extrato")
+        print("=== Extrato ===")
+        agora = datetime.datetime.now()
+        agora_string = agora.strftime("%A %d %B %y %I:%M")
+        print(agora_string)
+        print('==========')
+        if extrato == "":
+            print('----------')
+            print('Não foram realizadas movimentações.')
+            print('----------')
+        else:
+            print('--------------------')            
+            print(extrato,f'\nSaldo Atual: R$ {saldo:,.2f}')
+            print('--------------------')
+            
     elif opcao == "q":
         print("Sair")
         break
