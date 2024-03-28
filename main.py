@@ -25,27 +25,30 @@ while True:
 
     if opcao == "d":
         print("Deposito")
-        t = 0
+        n_tentativas_erradas = 0
+
         while True:
-            msg = input('Digite o Valor a ser depositado: ')
-            valor = float(msg)
+            msg_deposito = input('Digite o Valor a ser depositado: ')
+            valor_digitado_deposito = float(msg_deposito)
 
-            if valor <= 0:
-                t = t + 1
+            if valor_digitado_deposito <= 0:
+                n_tentativas_erradas += 1
                 print('Valor digitado Menor ou Igual a Zero.Por favor, tente novamente!')
-                print(msg)
+                print(msg_deposito)
 
-                print(f'Numero de Tentaivas:{t=}')
+                print(f'Você errou {n_tentativas_erradas} vez!')
 
-                if t == 3:
+                if n_tentativas_erradas == 3:
                     print(
-                        '\nVocê digitou 3 Vezes seguidas um valor Zero ou Negativo!\nPor favor tente novamente!')
+                        f'\nVocê digitou {n_tentativas_erradas} Vezes seguidas um valor Zero ou Negativo!\nPor favor tente novamente!')
                     break
 
             else:
-                print('Valor Ok')
-                #Grava a operaçõa na vaiável Extrato
-                extrato += (f'\n(+) Depósito R$ {valor}\n') 
+                print(f'Deposito no valor de R$ {valor_digitado_deposito:,.2f} foi realizado com sucesso!')
+                # Adicionar o Valor Digitado ao Saldo
+                saldo += valor_digitado_deposito
+                # Grava a operaçõa na vaiável Extrato
+                extrato += (f'\n(+) Depósito R$ {valor_digitado_deposito:,.2f}\n')
                 break
 
     elif opcao == "s":
