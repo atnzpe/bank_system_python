@@ -56,6 +56,10 @@ while True:
 
     elif opcao == "s":
         print("Saque")
+        
+        if numero_saques == LIMITE_SAQUES:
+            print(f'Você já efetuou {numero_saques} hoje!')
+        
 
     elif opcao == "e":
         print("=== Extrato ===")
