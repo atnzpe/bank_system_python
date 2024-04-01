@@ -57,35 +57,50 @@ while True:
     elif opcao == "s":
         print("Saque")
         
+        if numero_saques >= LIMITE_SAQUES:
+            print(f'Você já efetuou {numero_saques} saques hoje!')
+            break
+            
         while True:
+            
+            if saldo <= 0:
+                print(f'Seu saldo atual é R$ {saldo}!\n')
+                break
         
-            msg_saque = input('Digite o Valor a ser depositado: ')
+            msg_saque = input('Digite o Valor a ser sacado: ')
             valor_digitado_saque = float(msg_saque)
         
             if saldo <= 0 and numero_saques >= LIMITE_SAQUES:
                 print(f'Seu saldo atual é R$ {saldo}!')
                 print(f'Você já efetuou {numero_saques} saques hoje!')
+                break
         
             elif saldo <= 0:
-                print(f'Seu saldo atual é R$ {saldo}!')
+                print(f'Seu saldo atual é R$ {saldo}!\n')
+                break
         
             elif numero_saques >= LIMITE_SAQUES:
                 print(f'Você já efetuou {numero_saques} saques hoje!')
-        
+                break
             
             else:          
                 if valor_digitado_saque > 500:
                     print(f'Valor digitado para saque maior que R$ 500,00 {valor_digitado_saque=}')
-                    
+                    break
                 
                 else:
-                    print(
-                    f'Saque no valor de R$ {valor_digitado_saque:,.2f} foi realizado com sucesso!')
-                # Adicionar o Valor Digitado ao Saldo
-                saldo -= valor_digitado_saque
-                # Grava a operaçõa na vaiável Extrato
-                extrato += (f'\n(-) Saque R$ {valor_digitado_deposito:,.2f}\n')
-                break
+                    if valor_digitado_saque > saldo:
+                        print('Saldo insuficiente!')
+                        break
+                    else:
+                        print(
+                        f'Saque no valor de R$ {valor_digitado_saque:,.2f} foi realizado com sucesso!')
+                        # Adicionar o Valor Digitado ao Saldo
+                        saldo -= valor_digitado_saque
+                        # Grava a operaçõa na vaiável Extrato
+                        extrato += (f'\n(-) Saque R$ {valor_digitado_saque:,.2f}\n')
+                        numero_saques +=1
+                        break
                 
             
             
