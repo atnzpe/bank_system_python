@@ -57,9 +57,41 @@ while True:
     elif opcao == "s":
         print("Saque")
         
-        if numero_saques == LIMITE_SAQUES:
-            print(f'Você já efetuou {numero_saques} hoje!')
+        while True:
         
+            msg_saque = input('Digite o Valor a ser depositado: ')
+            valor_digitado_saque = float(msg_saque)
+        
+            if saldo <= 0 and numero_saques >= LIMITE_SAQUES:
+                print(f'Seu saldo atual é R$ {saldo}!')
+                print(f'Você já efetuou {numero_saques} saques hoje!')
+        
+            elif saldo <= 0:
+                print(f'Seu saldo atual é R$ {saldo}!')
+        
+            elif numero_saques >= LIMITE_SAQUES:
+                print(f'Você já efetuou {numero_saques} saques hoje!')
+        
+            
+            else:          
+                if valor_digitado_saque > 500:
+                    print(f'Valor digitado para saque maior que R$ 500,00 {valor_digitado_saque=}')
+                    
+                
+                else:
+                    print(
+                    f'Saque no valor de R$ {valor_digitado_saque:,.2f} foi realizado com sucesso!')
+                # Adicionar o Valor Digitado ao Saldo
+                saldo -= valor_digitado_saque
+                # Grava a operaçõa na vaiável Extrato
+                extrato += (f'\n(-) Saque R$ {valor_digitado_deposito:,.2f}\n')
+                break
+                
+            
+            
+            
+            
+            
 
     elif opcao == "e":
         print("=== Extrato ===")
