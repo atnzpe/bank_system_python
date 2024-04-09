@@ -22,92 +22,74 @@ def menu():
     return input(textwrap.dedent(menu))
 
 
+def exibir_extrato(saldo, /, *, extrato):
+    agora = datetime.datetime.now()
+    emissao = agora.strftime("%d/%m/%Y, %H:%M:%S")
+    print("\n================ EXTRATO ================")
+    print(f"\nEmitido em: {emissao}")
+    print("Não foram realizadas movimentações." if not extrato else extrato)
+
+    print(f"\nSaldo:\t\tR$ {saldo:.2f}")
+    print(f"\nEmitido em: {emissao}")
+    print("==========================================")
+
+
 # funcao saque
 
 
-def saque(numero_saques, limite_saques, saldo, extrato):
-    print("Saque")
+def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
+    excedeu_saldo = valor > saldo
+    excedeu_limite = valor > limite
+    excedeu_saques = numero_saques >= limite_saques
 
-    if numero_saques >= limite_saques:
-        print(f"Você já efetuou {numero_saques} saques hoje!")
-        # break
+    agora = datetime.datetime.now()
+    data_reg = agora.strftime("%d/%m/%Y, %H:%M:%S")
 
-    while True:
+    if excedeu_saldo:
+        print("Estais liso saldo insuficiente")
 
-        if saldo <= 0:
-            print(f"Seu saldo atual é R$ {saldo}!\n")
-            break
+    elif excedeu_limite:
+        print("Valor de saque maior que 500!")
 
-        msg_saque = input("Digite o Valor a ser sacado: ")
-        valor_digitado_saque = float(msg_saque)
+    elif excedeu_saques:
+        print("Ja fez tres saques hoje")
 
-        if saldo <= 0 and numero_saques >= limite_saques:
-            print(f"Seu saldo atual é R$ {saldo}!")
-            print(f"Você já efetuou {numero_saques} saques hoje!")
-            break
+    elif valor > 0:
+        saldo -= valor
+        numero_saques += 1
+        extrato += f"\n(-) Saque:\t\tR$ {valor:.2f}\n{data_reg}\n"
+        print("\n=== Saque realizado com sucesso! ===")
 
-        elif saldo <= 0:
-            print(f"Seu saldo atual é R$ {saldo}!\n")
-            break
+    else:
+        print("\n@@@ Operação falhou! O valor informado é inválido. @@@")
 
-        elif numero_saques >= limite_saques:
-            print(f"Você já efetuou {numero_saques} saques hoje!")
-            break
+    return saldo, extrato
 
-        else:
-            if valor_digitado_saque > 500:
-                print(
-                    f"Valor digitado para saque maior que R$ 500,00 {valor_digitado_saque=}"
-                )
-                break
-
-            else:
-                if valor_digitado_saque > saldo:
-                    print("Saldo insuficiente!")
-                    break
-                else:
-                    print(
-                        f"Saque no valor de R$ {valor_digitado_saque:,.2f} foi realizado com sucesso!"
-                    )
-                    # Adicionar o Valor Digitado ao Saldo
-                    saldo -= valor_digitado_saque
-                    # Grava a operaçõa na vaiável Extrato
-                    extrato += f"\n(-) Saque R$ {valor_digitado_saque:,.2f}\n"
-                    numero_saques += 1
-                    break
 
 # A funçõa recebe argumentos por posiçõa por isso temos o caracter '/'
+
+
 def deposito(saldo, valor_deposito, extrato, /):
-    #print("Deposito")
-    '''
-    n_tentativas_erradas = 0
-
-
-    if valor_deposito <= 0:
-        n_tentativas_erradas += 1
-        print("Valor digitado Menor ou Igual a Zero.Por favor, tente novamente!")
-        print(valor_deposito)
-
-        print(f"Você errou {n_tentativas_erradas} vez!")
-            
-        if n_tentativas_erradas == 3:
-            print(
-                f"\nVocê digitou {n_tentativas_erradas} Vezes seguidas um valor Zero ou Negativo!\nPor favor tente novamente!"
-                )
-    
-'''
+    # print("Deposito")
+    agora = datetime.datetime.now()
+    data_reg = agora.strftime("%d/%m/%Y, %H:%M:%S")
     if valor_deposito > 0:
-        print(f"Deposito no valor de R$ {valor_deposito:,.2f} foi realizado com sucesso!")
-        # Adicionar o Valor Digitado ao Saldo
         saldo += valor_deposito
-        # Grava a operaçõa na vaiável Extrato
-        extrato += f"\n(+) Depósito R$ {valor_deposito:,.2f}\n"
-    else:
-        print(f"Valor digitado ('R$ {valor_deposito:,.2f}')Menor ou Igual a Zero.Por favor, tente novamente!")
-        
-    
+        extrato += f"\n(+) Deposito:\t\tR$ {valor_deposito:,.2f}\n{data_reg}\n"
+        print(
+            f"Deposito no valor de R$ {valor_deposito:,.2f} foi realizado com sucesso!"
+        )
+        # Adicionar o Valor Digitado ao Saldo
 
-    return saldo, extrato            
+        # Grava a operaçõa na vaiável Extrato
+
+    else:
+        print(
+            f"Valor digitado ('R$ {valor_deposito:,.2f}')Menor ou Igual a Zero.Por favor, tente novamente!"
+        )
+
+    return saldo, extrato
+
 
 def main():
     # Variaveis
@@ -135,46 +117,23 @@ def main():
 
         if opcao == "d":
             valor_depositado = float(input("Digite o Valor a ser depositado: "))
-            
-            deposito(saldo,valor_depositado,extrato)
-            '''
-            print("Deposito")
-            n_tentativas_erradas = 0
 
-          
-                
-                
-                
+            saldo, extrato = deposito(saldo, valor_depositado, extrato)
 
-                if valor_deposito <= 0:
-                    n_tentativas_erradas += 1
-                    print(
-                        "Valor digitado Menor ou Igual a Zero.Por favor, tente novamente!"
-                    )
-                    print(valor_deposito)
-
-                    print(f"Você errou {n_tentativas_erradas} vez!")
-
-                if n_tentativas_erradas == 3:
-                    print(
-                        f"\nVocê digitou {n_tentativas_erradas} Vezes seguidas um valor Zero ou Negativo!\nPor favor tente novamente!"
-                    )
-                    break
-
-                else:
-                    print(
-                        f"Deposito no valor de R$ {valor_deposito:,.2f} foi realizado com sucesso!"
-                    )
-                    # Adicionar o Valor Digitado ao Saldo
-                    saldo += valor_deposito
-                    # Grava a operaçõa na vaiável Extrato
-                    extrato += f"\n(+) Depósito R$ {valor_deposito:,.2f}\n"
-                    break
-'''
         elif opcao == "s":
-            saque(numero_saques, LIMITE_SAQUES, saldo, extrato=extrato)
+            valor = float(input("Informe o valor do saque: "))
 
+            saldo, extrato = saque(
+                saldo=saldo,
+                valor=valor,
+                extrato=extrato,
+                limite=limite_por_saque,
+                numero_saques=numero_saques,
+                limite_saques=LIMITE_SAQUES,
+            )
         elif opcao == "e":
+            exibir_extrato(saldo, extrato=extrato)
+            """
             print("=== Extrato ===")
             agora = datetime.datetime.now()
             agora_string = agora.strftime("%A %d %B %y %I:%M")
@@ -188,7 +147,7 @@ def main():
                 print("--------------------")
                 print(extrato, f"\nSaldo Atual: R$ {saldo:,.2f}")
                 print("--------------------")
-
+"""
         elif opcao == "q":
             print("Sair")
             break
