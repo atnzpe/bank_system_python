@@ -116,7 +116,8 @@ def main():
         opcao = menu()
 
         if opcao == "d":
-            valor_depositado = float(input("Digite o Valor a ser depositado: "))
+            valor_depositado = float(
+                input("Digite o Valor a ser depositado: "))
 
             saldo, extrato = deposito(saldo, valor_depositado, extrato)
 
@@ -133,21 +134,7 @@ def main():
             )
         elif opcao == "e":
             exibir_extrato(saldo, extrato=extrato)
-            """
-            print("=== Extrato ===")
-            agora = datetime.datetime.now()
-            agora_string = agora.strftime("%A %d %B %y %I:%M")
-            print(agora_string)
-            print("==========")
-            if extrato == "":
-                print("----------")
-                print("Não foram realizadas movimentações.")
-                print("----------")
-            else:
-                print("--------------------")
-                print(extrato, f"\nSaldo Atual: R$ {saldo:,.2f}")
-                print("--------------------")
-"""
+
         elif opcao == "q":
             print("Sair")
             break
