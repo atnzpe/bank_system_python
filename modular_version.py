@@ -6,9 +6,9 @@ import textwrap
 
 def menu():
     # Exibe as opções para escolha
-    menu = """    
+    menu = """
     O que deseja fazer?
-    
+
     [d]\tDeposito
     [s]\tSaque
     [e]\tExtrato
@@ -16,7 +16,7 @@ def menu():
     [l]\tListar Contas
     [u]\tNovo Usuario
     [q]\tSair
-    
+
     -> Digite uma opção: """
 
     return input(textwrap.dedent(menu))
@@ -24,7 +24,7 @@ def menu():
 # extrato
 
 
-def exibir_extrato(saldo, /, *, extrato,usuarios,contas):
+def exibir_extrato(saldo, /, *, extrato, usuarios, contas):
     cpf = input("Informe o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
 
@@ -37,21 +37,21 @@ def exibir_extrato(saldo, /, *, extrato,usuarios,contas):
         """
         print("=" * 100)
         print(textwrap.dedent(linha))
-        
+
         agora = datetime.datetime.now()
         emissao = agora.strftime("%d/%m/%Y, %H:%M:%S")
         print("\n================ EXTRATO ================")
         print(linha)
-        #listar_contas()
+        # listar_contas()
         print(f"\nEmitido em: {emissao}")
         print("Não foram realizadas movimentações." if not extrato else extrato)
 
         print(f"\nSaldo:\t\tR$ {saldo:.2f}")
         print(f"\nEmitido em: {emissao}")
         print("==========================================")
-        
-    print("\n@@@ Usuário não encontrado, fluxo de criação de conta encerrado! @@@")
-    
+
+    else:
+        print("\n@@@ Usuário não encontrado, fluxo de criação de conta encerrado! @@@")
 
 
 # funcao saque
@@ -90,9 +90,11 @@ def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
 
 
 def deposito(saldo, valor_deposito, extrato, /):
-    # print("Deposito")
     agora = datetime.datetime.now()
     data_reg = agora.strftime("%d/%m/%Y, %H:%M:%S")
+
+    # for conta in contas:
+    # print("Deposito")
     if valor_deposito > 0:
         saldo += valor_deposito
         extrato += f"\n(+) Deposito:\t\tR$ {valor_deposito:,.2f}\n{data_reg}\n"
@@ -158,9 +160,9 @@ def listar_contas(contas):
         """
         print("=" * 100)
         print(textwrap.dedent(linha))
-    
 
-def titular_extrato(usuarios,contas):
+
+def titular_extrato(usuarios, contas):
     cpf = input("Informe o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
 
@@ -194,19 +196,45 @@ def main():
     usuarios = []
     # Contas
     contas = []
-    #linha
-    linha= ""
-    
+    # linha
+    linha = ""
 
     # Cria o Loop While com True
     while True:
         opcao = menu()
 
         if opcao == "d":
-            valor_depositado = float(
-                input("Digite o Valor a ser depositado: "))
+            cpf = input("Informe o CPF do usuário: ")
+            usuario = filtrar_usuario(cpf, usuarios)
 
-            saldo, extrato = deposito(saldo, valor_depositado, extrato)
+            if usuario:
+                valor_depositado = float(
+                    input("Digite o Valor a ser depositado: "))
+
+                saldo, extrato = deposito(saldo, valor_depositado, extrato)
+            else:
+                while True:
+                    print('Deseja cadastrar um novo usuário?')
+                    print('\n1-SIM\n2-NAO\n')
+                    escolha = input('Digite sua escolha: ')
+                    
+                    if escolha == "1":
+                        
+                        criar_usuario(usuarios)
+                        numero_conta = len(contas) + 1
+                        conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+                        if conta:
+                            contas.append(conta)
+                            break
+
+                    elif escolha == "2":
+                        print('Até a proxima!')
+                        break
+
+                    else:
+                        print('Digite uma opção válida!')
+                        continue
 
         elif opcao == "s":
             valor = float(input("Informe o valor do saque: "))
@@ -220,7 +248,8 @@ def main():
                 limite_saques=LIMITE_SAQUES,
             )
         elif opcao == "e":
-            exibir_extrato(saldo, extrato=extrato,usuarios=usuarios,contas=contas)
+            exibir_extrato(saldo, extrato=extrato,
+                           usuarios=usuarios, contas=contas)
 
         elif opcao == "u":
             criar_usuario(usuarios)
