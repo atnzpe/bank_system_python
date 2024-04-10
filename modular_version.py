@@ -21,17 +21,37 @@ def menu():
 
     return input(textwrap.dedent(menu))
 
-#extrato
-def exibir_extrato(saldo, /, *, extrato):
-    agora = datetime.datetime.now()
-    emissao = agora.strftime("%d/%m/%Y, %H:%M:%S")
-    print("\n================ EXTRATO ================")
-    print(f"\nEmitido em: {emissao}")
-    print("Não foram realizadas movimentações." if not extrato else extrato)
+# extrato
 
-    print(f"\nSaldo:\t\tR$ {saldo:.2f}")
-    print(f"\nEmitido em: {emissao}")
-    print("==========================================")
+
+def exibir_extrato(saldo, /, *, extrato,usuarios,contas):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        for conta in contas:
+            linha = f"""\
+            Agência:\t{conta['agencia']}
+            C/C:\t\t{conta['numero_conta']}
+            Titular:\t{conta['usuario']['nome']}
+        """
+        print("=" * 100)
+        print(textwrap.dedent(linha))
+        
+        agora = datetime.datetime.now()
+        emissao = agora.strftime("%d/%m/%Y, %H:%M:%S")
+        print("\n================ EXTRATO ================")
+        print(linha)
+        #listar_contas()
+        print(f"\nEmitido em: {emissao}")
+        print("Não foram realizadas movimentações." if not extrato else extrato)
+
+        print(f"\nSaldo:\t\tR$ {saldo:.2f}")
+        print(f"\nEmitido em: {emissao}")
+        print("==========================================")
+        
+    print("\n@@@ Usuário não encontrado, fluxo de criação de conta encerrado! @@@")
+    
 
 
 # funcao saque
@@ -90,28 +110,70 @@ def deposito(saldo, valor_deposito, extrato, /):
 
     return saldo, extrato
 
-#Novo usuario
+# Novo usuario
+
+
 def criar_usuario(usuarios):
     cpf = input('Digite o cpf (apenas numeros): ')
-    usuario = filtrar_usuario (cpf, usuarios)
-    
+    usuario = filtrar_usuario(cpf, usuarios)
+
     if usuario:
         print(' Usuario ja cadastrado')
         return
-    
+
     nome = input('Seu nome Completo é: ')
     data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
-    endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+    endereco = input(
+        "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
-    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+    usuarios.append({"nome": nome, "data_nascimento": data_nascimento,
+                    "cpf": cpf, "endereco": endereco})
 
     print("=== Usuário criado com sucesso! ===")
-    
+
+
 def filtrar_usuario(cpf, usuarios):
-    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    usuarios_filtrados = [
+        usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
+
+
+def criar_conta(agencia, numero_conta, usuarios):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        print("\n=== Conta criada com sucesso! ===")
+        return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+
+    print("\n@@@ Usuário não encontrado, fluxo de criação de conta encerrado! @@@")
+
+
+def listar_contas(contas):
+    for conta in contas:
+        linha = f"""\
+            Agência:\t{conta['agencia']}
+            C/C:\t\t{conta['numero_conta']}
+            Titular:\t{conta['usuario']['nome']}
+        """
+        print("=" * 100)
+        print(textwrap.dedent(linha))
     
-    
+
+def titular_extrato(usuarios,contas):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        for conta in contas:
+            linha = f"""\
+            Agência:\t{conta['agencia']}
+            C/C:\t\t{conta['numero_conta']}
+            Titular:\t{conta['usuario']['nome']}
+        """
+        print("=" * 100)
+        print(textwrap.dedent(linha))
+
 
 def main():
     # Variaveis
@@ -132,6 +194,7 @@ def main():
     usuarios = []
     # Contas
     contas = []
+    
 
     # Cria o Loop While com True
     while True:
@@ -155,10 +218,20 @@ def main():
                 limite_saques=LIMITE_SAQUES,
             )
         elif opcao == "e":
-            exibir_extrato(saldo, extrato=extrato)
-            
+            exibir_extrato(saldo, extrato=extrato,usuarios=usuarios,contas=contas)
+
         elif opcao == "u":
             criar_usuario(usuarios)
+
+        elif opcao == "n":
+            numero_conta = len(contas) + 1
+            conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+            if conta:
+                contas.append(conta)
+
+        elif opcao == "l":
+            listar_contas(contas)
 
         elif opcao == "q":
             print("Sair")
