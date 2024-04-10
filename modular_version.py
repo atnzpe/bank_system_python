@@ -194,6 +194,8 @@ def main():
     usuarios = []
     # Contas
     contas = []
+    #linha
+    linha= ""
     
 
     # Cria o Loop While com True
