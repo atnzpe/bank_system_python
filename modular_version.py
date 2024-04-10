@@ -217,9 +217,9 @@ def main():
                     print('Deseja cadastrar um novo usuário?')
                     print('\n1-SIM\n2-NAO\n')
                     escolha = input('Digite sua escolha: ')
-                    
+
                     if escolha == "1":
-                        
+
                         criar_usuario(usuarios)
                         numero_conta = len(contas) + 1
                         conta = criar_conta(AGENCIA, numero_conta, usuarios)
@@ -237,16 +237,45 @@ def main():
                         continue
 
         elif opcao == "s":
-            valor = float(input("Informe o valor do saque: "))
+            cpf = input("Informe o CPF do usuário: ")
+            usuario = filtrar_usuario(cpf, usuarios)
 
-            saldo, extrato = saque(
+            if usuario:
+                valor = float(input("Informe o valor do saque: "))
+
+                saldo, extrato = saque(
                 saldo=saldo,
                 valor=valor,
                 extrato=extrato,
                 limite=limite_por_saque,
                 numero_saques=numero_saques,
                 limite_saques=LIMITE_SAQUES,
-            )
+                )
+
+            else:
+                while True:
+                    print('Deseja cadastrar um novo usuário?')
+                    print('\n1-SIM\n2-NAO\n')
+                    escolha = input('Digite sua escolha: ')
+
+                    if escolha == "1":
+
+                        criar_usuario(usuarios)
+                        numero_conta = len(contas) + 1
+                        conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+                        if conta:
+                            contas.append(conta)
+                            break
+
+                    elif escolha == "2":
+                        print('Até a proxima!')
+                        break
+
+                    else:
+                        print('Digite uma opção válida!')
+                        continue
+
         elif opcao == "e":
             exibir_extrato(saldo, extrato=extrato,
                            usuarios=usuarios, contas=contas)
@@ -262,7 +291,36 @@ def main():
                 contas.append(conta)
 
         elif opcao == "l":
-            listar_contas(contas)
+            cpf = input("Informe o CPF do usuário: ")
+            usuario = filtrar_usuario(cpf, usuarios)
+
+            if usuario:
+                listar_contas(contas)
+                
+            else:
+                while True:
+                    print('=== CONTA NÃO ENCONTRADA ===')
+                    print('Deseja cadastrar um novo usuário e conta?')
+                    print('\n1-SIM\n2-NAO\n')
+                    escolha = input('Digite sua escolha: ')
+
+                    if escolha == "1":
+
+                        criar_usuario(usuarios)
+                        numero_conta = len(contas) + 1
+                        conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+                        if conta:
+                            contas.append(conta)
+                            break
+
+                    elif escolha == "2":
+                        print('Até a proxima!')
+                        break
+
+                    else:
+                        print('Digite uma opção válida!')
+                        continue
 
         elif opcao == "q":
             print("Sair")
