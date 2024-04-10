@@ -21,7 +21,7 @@ def menu():
 
     return input(textwrap.dedent(menu))
 
-
+#extrato
 def exibir_extrato(saldo, /, *, extrato):
     agora = datetime.datetime.now()
     emissao = agora.strftime("%d/%m/%Y, %H:%M:%S")
@@ -90,6 +90,19 @@ def deposito(saldo, valor_deposito, extrato, /):
 
     return saldo, extrato
 
+#Novo usuario
+def criar_usuario(usuarios):
+    cpf = input('Digite o cpf (apenas numeros): ')
+    usuario = filtrar_usuario (cpf, usuarios)
+    
+    if usuario:
+        print(' Usuario ja cadastrado')
+        return
+    
+    nome = input('Seu nome Completo é: ')
+    
+    
+    
 
 def main():
     # Variaveis
