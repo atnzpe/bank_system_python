@@ -8,20 +8,17 @@ def menu():
     # Exibe as opções para escolha
     menu = """
     O que deseja fazer?
+    [d] Depósito
+    [s] Saque
+    [e] Extrato
+    [n] Nova Conta
+    [l] Listar Contas
+    [u] Novo Usuário
+    [q] Sair
+    -> """  # Removido o texto "Digite uma opção:"
+    return input(menu)
 
-    [d]\tDeposito
-    [s]\tSaque
-    [e]\tExtrato
-    [n]\tNova Conta
-    [l]\tListar Contas
-    [u]\tNovo Usuario
-    [q]\tSair
-
-    -> Digite uma opção: """
-
-    return input(textwrap.dedent(menu))
-
-# extrato
+# Funçõa extrato
 
 
 def exibir_extrato(saldo, /, *, extrato, usuarios, contas):
