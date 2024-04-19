@@ -72,7 +72,7 @@ def main():
     LIMITE_SAQUES = 3
     # AGENCIA
     AGENCIA = "0001"
-    usuarios = []
+    #usuarios = []
     # Saldo incial zero
     saldo = 0
     # Limite de valor por saque
@@ -102,7 +102,7 @@ def main():
             pass
 
         elif opcao == "u":
-            usuarios = usuarios
+            #usuarios = usuarios
             cpf = input('Digite o cpf (apenas numeros): ')
             #nome = input('Seu nome Completo é: ')
             #data_nascimento = input(
