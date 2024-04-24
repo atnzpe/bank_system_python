@@ -1,15 +1,28 @@
 lista_usuarios = []
 
 class Conta:
-    def __init__(self, saldo, nr_conta):
-        self.saldo = saldo
-        self.nr_conta = nr_conta
+    def __init__(self, nr_agencia,saldo=0):
+        self._saldo = saldo
+        self.nr_agencia = nr_agencia
+        
+        #Exemplo para consultar o saldo
+        # conta = Conta(100)
+        # conta.depositar
+        #print(conta.nro_agencia)
+        # print(conta.mostrar_saldo())
 
-    def depositar(self):
-        pass
+    def depositar(self, valor):
+        # Digite aqui o código para realizar o deposito
+        self._saldo += valor 
 
-    def sacar(self):
-        pass
+    def sacar(self, valor):
+        # Digite aqui o código para realizar o saque
+        self._saldo -= valor 
+        
+    def mostrar_saldo(self):
+        # Adicione aqui a logica do código
+        return self._saldo
+        
 
 
 class Usuario:
