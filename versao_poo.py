@@ -1,60 +1,68 @@
 lista_usuarios = []
 
+
 class Conta:
-    def __init__(self, nr_agencia,saldo=0):
+    # Variável de Classe de nome AGENCIA
+    AGENCIA = "0001"
+    
+    def __init__(self, nr_agencia, saldo=0):
         self._saldo = saldo
-        self.nr_agencia = nr_agencia
         
-        #Exemplo para consultar o saldo
+        # Exemplo para consultar o saldo
         # conta = Conta(100)
         # conta.depositar
-        #print(conta.nro_agencia)
+        # print(conta.nro_agencia)
         # print(conta.mostrar_saldo())
 
     def depositar(self, valor):
         # Digite aqui o código para realizar o deposito
-        self._saldo += valor 
+        self._saldo += valor
 
     def sacar(self, valor):
         # Digite aqui o código para realizar o saque
-        self._saldo -= valor 
-        
+        self._saldo -= valor
+
     def mostrar_saldo(self):
         # Adicione aqui a logica do código
         return self._saldo
-        
 
 
 class Usuario:
-    
-    def __init__(self,cpf):
-        #self.nome = nome
+
+    def __init__(self, cpf):
+        # self.nome = nome
         self.cpf = cpf
-        #self.dt_nasc = dt_nasc
-        #self.endereco = endereco
-         
-        
-        
+        # self.dt_nasc = dt_nasc
+        # self.endereco = endereco
 
     def criar_usuario(self, usuarios):
         # Usuarios
         usuarios = lista_usuarios
         cpf = self.cpf
         usuario = self.filtrar_usuario(cpf, usuarios)
-        
+
         if usuario:
-            print(' Usuario ja cadastrado')
+            print(" Usuario ja cadastrado")
             return
         else:
-            nome = input('Seu nome Completo é: ')
-            data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
+            nome = input("Seu nome Completo é: ")
+            data_nascimento = input(
+                "Informe a data de nascimento (dd-mm-aaaa): ")
             endereco = input(
-                "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+                "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): "
+            )
 
-        usuarios.append({"nome": nome, "data_nascimento": data_nascimento,
-                         "cpf": cpf, "endereco": endereco})
+        usuarios.append(
+            {
+                "nome": nome,
+                "data_nascimento": data_nascimento,
+                "cpf": cpf,
+                "endereco": endereco,
+            }
+        )
         print("=== Usuário criado com sucesso! ===")  # Imprima aqui
         print(usuarios)
+
     def filtrar_usuario(self, cpf, usuarios):
         for usuario in usuarios:
             if usuario["cpf"] == cpf:
@@ -83,9 +91,8 @@ def main():
     # Variaveis
     # Limite de saques dia
     LIMITE_SAQUES = 3
-    # AGENCIA
-    AGENCIA = "0001"
-    #usuarios = []
+    
+    # usuarios = []
     # Saldo incial zero
     saldo = 0
     # Limite de valor por saque
@@ -95,8 +102,7 @@ def main():
     # Contador Saque Diário
     numero_saques = 0
     # Usuarios
-    
-    
+
     # Contas
     contas = []
     # linha
@@ -115,16 +121,17 @@ def main():
             pass
 
         elif opcao == "u":
-            #usuarios = usuarios
-            cpf = input('Digite o cpf (apenas numeros): ')
-            #nome = input('Seu nome Completo é: ')
-            #data_nascimento = input(
+            # usuarios = usuarios
+            cpf = input("Digite o cpf (apenas numeros): ")
+            # nome = input('Seu nome Completo é: ')
+            # data_nascimento = input(
             #    "Informe a data de nascimento (dd-mm-aaaa): ")
-            #endereco = input(
+            # endereco = input(
             #    "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
-            #usuario = int(cpf)
+            # usuario = int(cpf)
             novo_usuario = Usuario(cpf)
-            novo_usuario.criar_usuario(cpf)  # Não é necessário passar o CPF aqui
+            # Não é necessário passar o CPF aqui
+            novo_usuario.criar_usuario(cpf)
 
         elif opcao == "n":
             pass
