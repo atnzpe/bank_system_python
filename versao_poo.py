@@ -4,8 +4,22 @@ from abc import ABC, abstractclassmethod, abstractproperty
 
 lista_usuarios = []
 
-#Cria uma Class
-
+#Cria uma Class chamada Cliente
+class Cliente:
+    #atributos
+    def __init__(self, endereco):
+        self.endereco = endereco
+        self.conta[]
+        
+    #Possui o metodo realizar transacao
+    def realizar_transcacao(self, conta, transacao):
+        #chama o metodo registrar da class transacao
+        transacao.registrar(conta)
+    
+    #Possui o Metodo adcionar conta
+    def adiconar_conta(self,conta):
+        #Adciona contas no  atributo de class self.conta
+        self.contas.append(conta)
 
 class Conta:
     # Variável de Classe de nome AGENCIA
@@ -33,7 +47,7 @@ class Conta:
         return self._saldo
 
 
-class Usuario:
+class :
 
     def __init__(self, cpf):
         # self.nome = nome
