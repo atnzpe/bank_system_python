@@ -13,7 +13,7 @@ class PessoaFisica(Cliente):
         super().__init__(endereco)
         self.nome = nome
         self.data_nascimento = data_nascimento
-        self.cpf = cpf
+        self.cpf = cpf 
 
 #Class usada para gerenciar usuario filtro e validadaçoes de duplicida
 class GerenciadorUsuarios:
