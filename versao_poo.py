@@ -4,60 +4,40 @@ from abc import ABC, abstractclassmethod, abstractproperty
 
 lista_usuarios = []
 
-#Cria uma Class chamada Cliente
+# Cria uma Class chamada Cliente
+
+
 class Cliente:
-    #atributos
+    # atributos
     def __init__(self, endereco):
         self.endereco = endereco
-        self.conta[]
-        
-    #Possui o metodo realizar transacao
+        self.conta = []
+
+    # Possui o metodo realizar transacao
     def realizar_transcacao(self, conta, transacao):
-        #chama o metodo registrar da class transacao
+        # chama o metodo registrar da class transacao
         transacao.registrar(conta)
-    
-    #Possui o Metodo adcionar conta
-    def adiconar_conta(self,conta):
-        #Adciona contas no  atributo de class self.conta
+
+    # Possui o Metodo adcionar conta
+    def adiconar_conta(self, conta):
+        # Adciona contas no  atributo de class self.conta
         self.contas.append(conta)
 
-class Conta:
-    # Variável de Classe de nome AGENCIA
-    AGENCIA = "0001"
-    
-    def __init__(self, nr_agencia, saldo=0):
-        self._saldo = saldo
-        
-        # Exemplo para consultar o saldo
-        # conta = Conta(100)
-        # conta.depositar
-        # print(conta.nro_agencia)
-        # print(conta.mostrar_saldo())
 
-    def depositar(self, valor):
-        # Digite aqui o código para realizar o deposito
-        self._saldo += valor
+class PessoaFisica(Cliente):
 
-    def sacar(self, valor):
-        # Digite aqui o código para realizar o saque
-        self._saldo -= valor
-
-    def mostrar_saldo(self):
-        # Adicione aqui a logica do código
-        return self._saldo
-
-
-class :
-
-    def __init__(self, cpf):
-        # self.nome = nome
+    def __init__(self, nome, data_nascimento, cpf, endereco):
+        # importa o atributo da class Cliente como herança
+        super().__init__(endereco)
+        self.nome = nome
+        self.data_nascimento = data_nascimento
         self.cpf = cpf
-        # self.dt_nasc = dt_nasc
-        # self.endereco = endereco
 
     def criar_usuario(self, usuarios):
         # Usuarios
         usuarios = lista_usuarios
+        nome = self.nome
+        data_nascimento = self.data_nascimento
         cpf = self.cpf
         usuario = self.filtrar_usuario(cpf, usuarios)
 
@@ -90,6 +70,34 @@ class :
         return None
 
 
+class Conta:
+    # Variável de Classe de nome AGENCIA
+    AGENCIA = "0001"
+
+    def __init__(self, nr_agencia, saldo=0):
+        self._saldo = saldo
+
+        # Exemplo para consultar o saldo
+        # conta = Conta(100)
+        # conta.depositar
+        # print(conta.nro_agencia)
+        # print(conta.mostrar_saldo())
+
+    def depositar(self, valor):
+        # Digite aqui o código para realizar o deposito
+        self._saldo += valor
+
+    def sacar(self, valor):
+        # Digite aqui o código para realizar o saque
+        self._saldo -= valor
+
+    def mostrar_saldo(self):
+        # Adicione aqui a logica do código
+        return self._saldo
+
+# Class Pessoa Fisica com Herança das Class CLiente
+
+
 def main():
 
     # funcao MENU
@@ -111,7 +119,7 @@ def main():
     # Variaveis
     # Limite de saques dia
     LIMITE_SAQUES = 3
-    
+
     # usuarios = []
     # Saldo incial zero
     saldo = 0
@@ -141,15 +149,11 @@ def main():
             pass
 
         elif opcao == "u":
-            # usuarios = usuarios
+            # Pede o CPF paara checar se o cliente pessoa fisica esta cadstrado
+            nome = input('Digite seu nome: ')
             cpf = input("Digite o cpf (apenas numeros): ")
-            # nome = input('Seu nome Completo é: ')
-            # data_nascimento = input(
-            #    "Informe a data de nascimento (dd-mm-aaaa): ")
-            # endereco = input(
-            #    "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
-            # usuario = int(cpf)
-            novo_usuario = Usuario(cpf)
+
+            novo_usuario = PessoaFisica(nome,  cpf)
             # Não é necessário passar o CPF aqui
             novo_usuario.criar_usuario(cpf)
 
