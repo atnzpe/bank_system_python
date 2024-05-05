@@ -129,3 +129,4 @@ while True:
     else:
         print(f"===ATENÇÃO===\nVocê digitou {opcao}")
         print("\nPor favor, digite um Opção válida!\n")
+
