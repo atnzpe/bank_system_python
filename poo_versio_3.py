@@ -30,7 +30,8 @@ class Banco:
 
     def listar_contas(self):
         for conta in self.contas:
-            print(f"Número: {conta.numero}, Agência: {conta.agencia}, Titular: {conta.titular.nome}")
+            print(
+                f"Número: {conta.numero}, Agência: {conta.agencia}, Titular: {conta.titular.nome}")
 
     def obter_conta_por_cpf(self, cpf):
         for conta in self.contas:
@@ -116,17 +117,19 @@ def menu_yes_or_no():
     Sim ou Não?
     [s] SIM
     [n] NÂO
-    ->"""
+    ->  """
     return input(menu_yes_or_no)
 
-
-#menu_aux = menu_yes_or_no()
+# Função principal do programa. Gerencia as operações bancárias.
 
 
 def main():
-    banco = Banco()  # Cria um objeto Banco
+    # Cria um objeto da classe Banco, que representa o sistema bancário com suas funcionalidades.
+    banco = Banco()
 
+    # Inciar um Laço True esperando o usuario interagir com o menu
     while True:
+        # Cria a Veriável opção para que recebe uma escolha do usuario nas opções dispostas pela função Menu()
         opcao = menu()
 
         if opcao == "d":
@@ -141,9 +144,33 @@ def main():
                 except ValueError as e:
                     print(e)
             else:
-                input("Conta não encontrada. Deseja criar uma conta? ")
-                print(menu_aux)
-                pass
+                print("Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+
+                menu_aux = menu_yes_or_no()
+
+                # Se escolher SIM crie um e uma nova conta
+                if menu_aux == "s":
+                    print("=== Iniciando a criação do usuário ===")
+                    nome = input("Digite o nome do usuário: ")
+                    cpf = cpf
+                    data_nascimento = input(
+                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                    endereco = input("Digite o endereço: ")
+                    try:
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
+                        print("Usuário criado com sucesso!")
+                    except ValueError as e:
+                        print(e)
+
+                    # Incia o cadastro da conta
+                    usuario = banco.obter_usuario_por_cpf(cpf)
+                    if usuario:
+                        numero_conta = len(banco.contas) + 1
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
+                        print(
+                            f"Conta criada com sucesso! Número: {conta.numero}")
 
         elif opcao == "s":
             cpf = input("Informe o CPF do usuário: ")
