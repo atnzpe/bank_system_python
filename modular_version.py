@@ -241,12 +241,12 @@ def main():
                 valor = float(input("Informe o valor do saque: "))
 
                 saldo, extrato = saque(
-                saldo=saldo,
-                valor=valor,
-                extrato=extrato,
-                limite=limite_por_saque,
-                numero_saques=numero_saques,
-                limite_saques=LIMITE_SAQUES,
+                    saldo=saldo,
+                    valor=valor,
+                    extrato=extrato,
+                    limite=limite_por_saque,
+                    numero_saques=numero_saques,
+                    limite_saques=LIMITE_SAQUES,
                 )
 
             else:
@@ -293,7 +293,7 @@ def main():
 
             if usuario:
                 listar_contas(contas)
-                
+
             else:
                 while True:
                     print('=== CONTA NÃO ENCONTRADA ===')
