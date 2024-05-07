@@ -74,9 +74,16 @@ class Conta:
         print("-" * 30)
         print(f"Extrato da conta {self.numero}")
         print("-" * 30)
-        for transacao in self.extrato:
-            print(f"{transacao.data} - {transacao.tipo}: R$ {transacao.valor:.2f}")
-        print(f"Saldo: R$ {self._saldo:.2f}")
+        
+        # Verifica se o extrato esta vazio
+        if not self.extrato:
+            print('----------')
+            print('Não foram realizadas movimentações.')
+            print('----------')
+        else:
+            for transacao in self.extrato:
+                print(f"{transacao.data} - {transacao.tipo}: R$ {transacao.valor:.2f}")
+            print(f"Saldo: R$ {self._saldo:.2f}")
         print("-" * 30)
 
 
