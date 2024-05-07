@@ -98,7 +98,8 @@ class Conta:
         print("-" * 30)
         print(f"{dt_extrato}")
         print(f"Extrato da conta {self.numero} / Agencia: {self.agencia}")
-        print(f"Usuario da Conta {self.titular.nome} - CPF: {self.titular.cpf}")
+        print(
+            f"Usuario da Conta {self.titular.nome} - CPF: {self.titular.cpf}")
         print("-" * 30)
 
         # Verifica se o extrato esta vazio
