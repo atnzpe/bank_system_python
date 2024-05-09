@@ -123,13 +123,28 @@ class Conta:
         transacao = Transacao(valor, "(+) Deposito", self._saldo)
         self.extrato.append(transacao)
         print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
+    
+    def entrada_por_transferencia(self,valor):
+        """
+        Efetua ENTRADA por transferencia
+
+        Args:
+            valor (float): Valor da transação (ENTRADA por transferencia).
+
+        Returns:
+            None.
+        """
+        self._saldo += valor
+        transacao = Transacao(valor, f"(+) ENTRADA por transferencia", self._saldo)
+        self.extrato.append(transacao)
+        print(f"ENTRADA por transferencia  R$ {valor:.2f} realizado com sucesso!")
 
     def saida_por_transferencia(self, valor):
         """
         Efetua transação de Retirada de Valor por Transferencia
 
         Args:
-            valor (float): Valor da retirada (negativo para saque).
+            valor (float): É o valor que será retirado da conta de origem.
 
         Returns:
             None.
@@ -137,7 +152,7 @@ class Conta:
         self._saldo -= valor
         if valor > self._saldo:
             raise ValueError("Saldo insuficiente.")
-        if (
+        '''if (
             len(
                 [
                     t
@@ -147,10 +162,10 @@ class Conta:
             )
             >= 3
         ):
-            raise ValueError("Limite de saques diários atingido.")
-        transacao = Transacao(valor, "(-) Saída por Transferência", self._saldo)
+            raise ValueError("Limite de saques diários atingido.")'''
+        transacao = Transacao(valor, f"(-) Saída por Transferência ", self._saldo)
         self.extrato.append(transacao)
-        print(f"Aparece na Linha 153 Saque de R$ {valor:.2f} realizado com sucesso!")
+        #print(f"Transferencia para  e de R$ {valor:.2f} realizado com sucesso!")
     
     def sacar(self, valor):
         """
@@ -193,11 +208,11 @@ class Conta:
         """
         #Verifica se o saldo é maior do que a variável privada self._saldo
         if valor > self._saldo:
-            #Se for faço vai retornar um raise informando que o saldo é insuficiente.
+            #Se o suario não tiver saldo o Raisen  vai retornar um raise informando que o saldo é insuficiente.
             raise ValueError("Saldo insuficiente para transferência.")
         self.saida_por_transferencia(valor)  # Usa o método saida_por_transferencia existente para debitar o valor
-        conta_destino.depositar(valor)  # Usa o método depositar existente para creditar o valor
-        print(f"Transferência de R$ {valor:.2f} para a conta {conta_destino.numero} realizada com sucesso!")
+        conta_destino.entrada_por_transferencia(valor)  # Usa o método entrada_por_transferencia existente para creditar o valor
+        print(f"Parabéns {self.titular.nome}Transferência de R$ {valor:.2f} {self.numero} para a conta {conta_destino.numero} realizada com sucesso!")
 
     def exibir_extrato(self):
         """
@@ -262,8 +277,8 @@ class Transacao:
         Inicializa um objeto Transacao com informações sobre a transação realizada.
 
         Args:
-        valor (float): Valor da transação (positivo para depósitos, negativo para saques).
-        tipo (str): Tipo da transação ("deposito" ou "saque").
+        valor (float): Valor da transação (positivo para depósitos e recebimento de transferecia, negativo para saques e saida por transferencia, ).
+        tipo (str): Tipo da transação ("deposito", "saque", "(-) Saída por Transferência).
         saldo (float): Saldo da conta após a transação.
 
         Returns:
@@ -335,6 +350,9 @@ def main():
         elif opcao == "s":
             cpf = input("Informe o CPF do usuário: ")
             conta = banco.obter_conta_por_cpf(cpf)
+            
+            if not conta:
+                conta = banco.criar_usuario_e_conta_se_necessario(cpf)
 
             if conta:
                 try:
@@ -342,48 +360,20 @@ def main():
                     conta.sacar(valor_saque)
                 except ValueError as e:
                     print(e)
-            else:
-                print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
-                )
-
-                menu_aux = menu_yes_or_no()
-
-                # Se escolher SIM crie um e uma nova conta
-                if menu_aux == "1":
-                    print("=== Iniciando a criação do usuário ===")
-                    nome = input("Digite o nome do usuário: ")
-                    cpf = cpf
-                    data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): "
-                    )
-                    endereco = input("Digite o endereço: ")
-                    try:
-                        banco.criar_usuario(
-                            nome, cpf, data_nascimento, endereco)
-                        print("Usuário criado com sucesso!")
-                    except ValueError as e:
-                        print(e)
-
-                    # Incia o cadastro da conta
-                    usuario = banco.obter_usuario_por_cpf(cpf)
-                    if usuario:
-                        numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(
-                            numero_conta, "0001", usuario)
-                        print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
-                        )
-
-            conta = banco.obter_conta_por_cpf(cpf)
+            
             
         elif opcao == "t":
+            #Solicita o cpf de origem 
             cpf_origem = input("Informe o CPF de Origem: ")
+            #Obtem a conta de origem
             conta_origem = banco.obter_conta_por_cpf(cpf_origem)
-            
+            nome = banco.obter_usuario_por_cpf(cpf_origem)
+            #se não houver a conta criada será solicitado a criacao
             if not conta_origem:
-                print("Conta de origem não encontrada.")
+                conta = banco.criar_usuario_e_conta_se_necessario(cpf_origem)
                 continue
+            
+            valor_deposito = input("Digite o valor a ser depositado: ") #
             
             cpf_destino = input("Informe o CPF Destino: ")
             conta_destino = banco.obter_conta_por_cpf(cpf_destino)
@@ -391,11 +381,10 @@ def main():
             if not conta_destino:
                 print("Conta de destino não encontrada.")
                 continue
-            valor_deposito = input("Digite o valor a ser depositado: ")
-            
+                        
             try:
-                valor_transferencia = float(input("Digite o valor da transferência: "))
-                conta_origem.transferir(valor_transferencia, conta_destino) 
+                valor_transferencia = float(valor_deposito)
+                conta_origem.transferir(valor_transferencia, conta_destino,conta_origem,nome) 
             except ValueError as e:
                 print(e)
 
