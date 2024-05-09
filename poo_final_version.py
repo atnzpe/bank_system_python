@@ -77,7 +77,7 @@ class Conta:
         self.extrato = []
 
     def depositar(self, valor):
-        transacao = Transacao(valor, "deposito")
+        transacao = Transacao(valor, "(+) Deposito")
         self.extrato.append(transacao)
         self._saldo += valor
         print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
@@ -91,8 +91,18 @@ class Conta:
         self.extrato.append(transacao)
         self._saldo -= valor
         print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
+        
 
     def exibir_extrato(self):
+        """
+        Cria a exibição o extrato com as transaçoes do usuario
+
+        Args:
+            Não tem.
+
+        Returns:
+            usuario: usuario criado.
+        """
         data = datetime.datetime.now()
         dt_extrato = data.strftime("%d/%m/%Y %H:%M:%S")
         print("-" * 30)
@@ -124,11 +134,28 @@ class PessoaFisica:
 
 
 class Transacao:
-    def __init__(self, valor, tipo):
+    """
+        Classe que os dados sobre as transações realizadas.
+    """
+    def __init__(self, valor, tipo, saldo):
+        """
+        Cria a exibição o extrato com as transaçoes do usuario
+
+        Args:
+            Valor(int): Valor de saque ou deposito de cda transaçõa
+            tipo(str): tipo da trtansçõa efetuada (saque ou deposito)
+            data(date): representa a data de cada registro
+            saldo(float): saldo final da conta
+
+        Returns:
+            não tem.
+        """
         dt_extrato = datetime.datetime.now()
         self.valor = valor
         self.tipo = tipo
         self.data = dt_extrato.strftime("%d/%m/%Y %H:%M:%S")
+        self.saldo = saldo
+        
 
 
 def menu():
