@@ -1,12 +1,10 @@
-
-
 # Importa a biblioteca date time
 import datetime
 
 
 class Banco:
     """
-        Classe que representa um banco com suas contas e usuários.
+    Classe que representa um banco com suas contas e usuários.
     """
 
     def __init__(self):
@@ -53,7 +51,8 @@ class Banco:
     def listar_contas(self):
         for conta in self.contas:
             print(
-                f"Número: {conta.numero}, Agência: {conta.agencia}, Titular: {conta.titular.nome}")
+                f"Número: {conta.numero}, Agência: {conta.agencia}, Titular: {conta.titular.nome}"
+            )
 
     def obter_conta_por_cpf(self, cpf):
         for conta in self.contas:
@@ -77,21 +76,47 @@ class Conta:
         self.extrato = []
 
     def depositar(self, valor):
-        transacao = Transacao(valor, "(+) Deposito")
-        self.extrato.append(transacao)
+        """
+        Efetua transação deposito
+
+        Args:
+            valor (float): Valor da transação (positivo para depósitos).
+
+        Returns:
+            None.
+        """
         self._saldo += valor
+        transacao = Transacao(valor, "(+) Deposito", self._saldo)
+        self.extrato.append(transacao)
         print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
 
     def sacar(self, valor):
+        """
+        Efetua transação de saque
+
+        Args:
+            valor (float): Valor da transação (negativo para saque).
+
+        Returns:
+            None.
+        """
+        self._saldo -= valor
         if valor > self._saldo:
             raise ValueError("Saldo insuficiente.")
-        if len([t for t in self.extrato if t.tipo == "saque" and t.data.date() == datetime.date.today()]) >= 3:
+        if (
+            len(
+                [
+                    t
+                    for t in self.extrato
+                    if t.tipo == "(-) Saque" and t.data.date() == datetime.date.today()
+                ]
+            )
+            >= 3
+        ):
             raise ValueError("Limite de saques diários atingido.")
-        transacao = Transacao(valor, "saque")
+        transacao = Transacao(valor, "(-) Saque", self._saldo)
         self.extrato.append(transacao)
-        self._saldo -= valor
         print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
-        
 
     def exibir_extrato(self):
         """
@@ -104,24 +129,37 @@ class Conta:
             usuario: usuario criado.
         """
         data = datetime.datetime.now()
-        dt_extrato = data.strftime("%d/%m/%Y %H:%M:%S")
+        dt_extrato = data.strftime("%d/%m/%Y, %H:%M:%S")
+        e = " EXTRATO "
+        text_registro_transacao = " MOVIMENTAÇÕES "
+
+        text = f"""                
+Data da Emissão: {dt_extrato}
+Agência: {self.agencia}
+Conta:   {self.numero}
+Cliente: {self.titular.nome}
+CPF Cliente: {self.titular.cpf}"""
+
+        print(e.center(30, "="))
         print("-" * 30)
-        print(f"{dt_extrato}")
-        print(f"Extrato da conta {self.numero} / Agencia: {self.agencia}")
-        print(
-            f"Usuario da Conta {self.titular.nome} - CPF: {self.titular.cpf}")
+        print("DADOS DA CONTA")
+        print("-" * 30)
+        print(text)
+        print("-" * 30)
+        print(text_registro_transacao.center(30, "="))
         print("-" * 30)
 
         # Verifica se o extrato esta vazio
         if not self.extrato:
-            print('----------')
-            print('Não foram realizadas movimentações.')
-            print('----------')
+            print("Não foram realizadas movimentações.")
+
         else:
             for transacao in self.extrato:
                 print(
-                    f"{transacao.data} - {transacao.tipo}: R$ {transacao.valor:.2f}")
-            print(f"Saldo: R$ {self._saldo:.2f}")
+                    f"{transacao.data} - {transacao.tipo}: R$ {transacao.valor:.2f} - Saldo: R$ {self._saldo:.2f}"
+                )
+        print("-" * 30)
+        print(f"Saldo Final: R$ {self._saldo:.2f}")
         print("-" * 30)
 
 
@@ -135,26 +173,26 @@ class PessoaFisica:
 
 class Transacao:
     """
-        Classe que os dados sobre as transações realizadas.
+    Classe que os dados sobre as transações realizadas.
     """
+
     def __init__(self, valor, tipo, saldo):
-       """
+        """
         Inicializa um objeto Transacao com informações sobre a transação realizada.
 
         Args:
-            valor (float): Valor da transação (positivo para depósitos, negativo para saques).
-            tipo (str): Tipo da transação ("deposito" ou "saque").
-            saldo (float): Saldo da conta após a transação.
+        valor (float): Valor da transação (positivo para depósitos, negativo para saques).
+        tipo (str): Tipo da transação ("deposito" ou "saque").
+        saldo (float): Saldo da conta após a transação.
 
         Returns:
-            None
+        None
         """
         dt_extrato = datetime.datetime.now()
         self.valor = valor
         self.tipo = tipo
-        self.data = dt_extrato.strftime("%d/%m/%Y %H:%M:%S")
+        self.data = dt_extrato.strftime("%d/%m/%Y, %H:%M:%S")
         self.saldo = saldo
-        
 
 
 def menu():
@@ -171,6 +209,7 @@ def menu():
     -> """
     return input(menu)
 
+
 # Menu auxiliar para escolha de sim ou não
 
 
@@ -181,6 +220,7 @@ def menu_yes_or_no():
     [0] NÂO
     ->  """
     return input(menu_yes_or_no)
+
 
 # Função principal do programa. Gerencia as operações bancárias.
 
@@ -200,14 +240,14 @@ def main():
 
             if conta:
                 try:
-                    valor_deposito = float(
-                        input("Digite o valor do depósito: "))
+                    valor_deposito = float(input("Digite o valor do depósito: "))
                     conta.depositar(valor_deposito)
                 except ValueError as e:
                     print(e)
             else:
                 print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
+                )
 
                 menu_aux = menu_yes_or_no()
 
@@ -217,11 +257,11 @@ def main():
                     nome = input("Digite o nome do usuário: ")
                     cpf = cpf
                     data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                        "Digite a data de nascimento (dd/mm/aaaa): "
+                    )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(
-                            nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -230,10 +270,10 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(
-                            numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(numero_conta, "0001", usuario)
                         print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
+                        )
 
             conta = banco.obter_conta_por_cpf(cpf)
 
@@ -249,7 +289,8 @@ def main():
                     print(e)
             else:
                 print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
+                )
 
                 menu_aux = menu_yes_or_no()
 
@@ -259,11 +300,11 @@ def main():
                     nome = input("Digite o nome do usuário: ")
                     cpf = cpf
                     data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                        "Digite a data de nascimento (dd/mm/aaaa): "
+                    )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(
-                            nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -272,10 +313,10 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(
-                            numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(numero_conta, "0001", usuario)
                         print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
+                        )
 
             conta = banco.obter_conta_por_cpf(cpf)
 
@@ -287,7 +328,8 @@ def main():
                 conta.exibir_extrato()
             else:
                 print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
+                )
 
                 menu_aux = menu_yes_or_no()
 
@@ -297,11 +339,11 @@ def main():
                     nome = input("Digite o nome do usuário: ")
                     cpf = cpf
                     data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                        "Digite a data de nascimento (dd/mm/aaaa): "
+                    )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(
-                            nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -310,18 +352,17 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(
-                            numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(numero_conta, "0001", usuario)
                         print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
+                        )
 
             conta = banco.obter_conta_por_cpf(cpf)
 
         elif opcao == "u":
             nome = input("Digite o nome do usuário: ")
             cpf = input("Digite o CPF do usuário: ")
-            data_nascimento = input(
-                "Digite a data de nascimento (dd/mm/aaaa): ")
+            data_nascimento = input("Digite a data de nascimento (dd/mm/aaaa): ")
             endereco = input("Digite o endereço: ")
             try:
                 banco.criar_usuario(nome, cpf, data_nascimento, endereco)
@@ -339,7 +380,8 @@ def main():
                 print(f"Conta criada com sucesso! Número: {conta.numero}")
             else:
                 print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
+                )
 
                 menu_aux = menu_yes_or_no()
 
@@ -349,11 +391,11 @@ def main():
                     nome = input("Digite o nome do usuário: ")
                     cpf = cpf
                     data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                        "Digite a data de nascimento (dd/mm/aaaa): "
+                    )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(
-                            nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -362,10 +404,10 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(
-                            numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(numero_conta, "0001", usuario)
                         print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
+                        )
 
             conta = banco.obter_conta_por_cpf(cpf)
 

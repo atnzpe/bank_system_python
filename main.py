@@ -5,7 +5,13 @@ import datetime
 # Imprime perguntando o que o cliente deseja fazer
 
 # Exibe as opções para escolha
-menu = "O que deseja fazer?\n[d] Deposito\n[s] Saque\n[e] Extrato\n[q] Sair\nDigite uma opção: "
+menu = """
+O que deseja fazer?
+[d] Deposito
+[s] Saque
+[e] Extrato
+[q] Sair
+Digite uma opção: """
 
 # Variaveis
 # Saldo incial zero
