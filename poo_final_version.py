@@ -125,9 +125,10 @@ class PessoaFisica:
 
 class Transacao:
     def __init__(self, valor, tipo):
+        dt_extrato = datetime.datetime.now()
         self.valor = valor
         self.tipo = tipo
-        self.data = datetime.datetime.now()
+        self.data = dt_extrato.strftime("%d/%m/%Y %H:%M:%S")
 
 
 def menu():
@@ -259,7 +260,36 @@ def main():
             if conta:
                 conta.exibir_extrato()
             else:
-                print("Conta não encontrada.")
+                print(
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+
+                menu_aux = menu_yes_or_no()
+
+                # Se escolher SIM crie um e uma nova conta
+                if menu_aux == "1":
+                    print("=== Iniciando a criação do usuário ===")
+                    nome = input("Digite o nome do usuário: ")
+                    cpf = cpf
+                    data_nascimento = input(
+                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                    endereco = input("Digite o endereço: ")
+                    try:
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
+                        print("Usuário criado com sucesso!")
+                    except ValueError as e:
+                        print(e)
+
+                    # Incia o cadastro da conta
+                    usuario = banco.obter_usuario_por_cpf(cpf)
+                    if usuario:
+                        numero_conta = len(banco.contas) + 1
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
+                        print(
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+
+            conta = banco.obter_conta_por_cpf(cpf)
 
         elif opcao == "u":
             nome = input("Digite o nome do usuário: ")
@@ -282,7 +312,36 @@ def main():
                 conta = banco.criar_conta(numero_conta, "0001", usuario)
                 print(f"Conta criada com sucesso! Número: {conta.numero}")
             else:
-                print("Usuário não encontrado.")
+                print(
+                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?")
+
+                menu_aux = menu_yes_or_no()
+
+                # Se escolher SIM crie um e uma nova conta
+                if menu_aux == "1":
+                    print("=== Iniciando a criação do usuário ===")
+                    nome = input("Digite o nome do usuário: ")
+                    cpf = cpf
+                    data_nascimento = input(
+                        "Digite a data de nascimento (dd/mm/aaaa): ")
+                    endereco = input("Digite o endereço: ")
+                    try:
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
+                        print("Usuário criado com sucesso!")
+                    except ValueError as e:
+                        print(e)
+
+                    # Incia o cadastro da conta
+                    usuario = banco.obter_usuario_por_cpf(cpf)
+                    if usuario:
+                        numero_conta = len(banco.contas) + 1
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
+                        print(
+                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
+
+            conta = banco.obter_conta_por_cpf(cpf)
 
         elif opcao == "l":
             banco.listar_contas()

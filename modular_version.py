@@ -18,6 +18,7 @@ def menu():
     -> """  # Removido o texto "Digite uma opção:"
     return input(menu)
 
+
 # Funçõa extrato
 
 
@@ -109,31 +110,38 @@ def deposito(saldo, valor_deposito, extrato, /):
 
     return saldo, extrato
 
+
 # Novo usuario
 
 
 def criar_usuario(usuarios):
-    cpf = input('Digite o cpf (apenas numeros): ')
+    cpf = input("Digite o cpf (apenas numeros): ")
     usuario = filtrar_usuario(cpf, usuarios)
 
     if usuario:
-        print(' Usuario ja cadastrado')
+        print(" Usuario ja cadastrado")
         return
 
-    nome = input('Seu nome Completo é: ')
+    nome = input("Seu nome Completo é: ")
     data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
     endereco = input(
-        "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+        "Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): "
+    )
 
-    usuarios.append({"nome": nome, "data_nascimento": data_nascimento,
-                    "cpf": cpf, "endereco": endereco})
+    usuarios.append(
+        {
+            "nome": nome,
+            "data_nascimento": data_nascimento,
+            "cpf": cpf,
+            "endereco": endereco,
+        }
+    )
 
     print("=== Usuário criado com sucesso! ===")
 
 
 def filtrar_usuario(cpf, usuarios):
-    usuarios_filtrados = [
-        usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
 
 
@@ -205,15 +213,14 @@ def main():
             usuario = filtrar_usuario(cpf, usuarios)
 
             if usuario:
-                valor_depositado = float(
-                    input("Digite o Valor a ser depositado: "))
+                valor_depositado = float(input("Digite o Valor a ser depositado: "))
 
                 saldo, extrato = deposito(saldo, valor_depositado, extrato)
             else:
                 while True:
-                    print('Deseja cadastrar um novo usuário?')
-                    print('\n1-SIM\n2-NAO\n')
-                    escolha = input('Digite sua escolha: ')
+                    print("Deseja cadastrar um novo usuário?")
+                    print("\n1-SIM\n2-NAO\n")
+                    escolha = input("Digite sua escolha: ")
 
                     if escolha == "1":
 
@@ -226,11 +233,11 @@ def main():
                             break
 
                     elif escolha == "2":
-                        print('Até a proxima!')
+                        print("Até a proxima!")
                         break
 
                     else:
-                        print('Digite uma opção válida!')
+                        print("Digite uma opção válida!")
                         continue
 
         elif opcao == "s":
@@ -251,9 +258,9 @@ def main():
 
             else:
                 while True:
-                    print('Deseja cadastrar um novo usuário?')
-                    print('\n1-SIM\n2-NAO\n')
-                    escolha = input('Digite sua escolha: ')
+                    print("Deseja cadastrar um novo usuário?")
+                    print("\n1-SIM\n2-NAO\n")
+                    escolha = input("Digite sua escolha: ")
 
                     if escolha == "1":
 
@@ -266,16 +273,15 @@ def main():
                             break
 
                     elif escolha == "2":
-                        print('Até a proxima!')
+                        print("Até a proxima!")
                         break
 
                     else:
-                        print('Digite uma opção válida!')
+                        print("Digite uma opção válida!")
                         continue
 
         elif opcao == "e":
-            exibir_extrato(saldo, extrato=extrato,
-                           usuarios=usuarios, contas=contas)
+            exibir_extrato(saldo, extrato=extrato, usuarios=usuarios, contas=contas)
 
         elif opcao == "u":
             criar_usuario(usuarios)
@@ -296,10 +302,10 @@ def main():
 
             else:
                 while True:
-                    print('=== CONTA NÃO ENCONTRADA ===')
-                    print('Deseja cadastrar um novo usuário e conta?')
-                    print('\n1-SIM\n2-NAO\n')
-                    escolha = input('Digite sua escolha: ')
+                    print("=== CONTA NÃO ENCONTRADA ===")
+                    print("Deseja cadastrar um novo usuário e conta?")
+                    print("\n1-SIM\n2-NAO\n")
+                    escolha = input("Digite sua escolha: ")
 
                     if escolha == "1":
 
@@ -312,11 +318,11 @@ def main():
                             break
 
                     elif escolha == "2":
-                        print('Até a proxima!')
+                        print("Até a proxima!")
                         break
 
                     else:
-                        print('Digite uma opção válida!')
+                        print("Digite uma opção válida!")
                         continue
 
         elif opcao == "q":
