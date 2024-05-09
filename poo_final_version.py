@@ -66,6 +66,40 @@ class Banco:
                 return usuario
         return None
 
+    def criar_usuario_e_conta_se_necessario(banco, cpf):
+        """
+        Cria um novo usuário e uma nova conta se a conta com o CPF informado não for encontrada.
+
+        Args:
+            banco (Banco): O objeto Banco.
+            cpf (str): O CPF do usuário.
+
+        Returns:
+            Conta: A conta criada ou None se o usuário não quiser criar uma conta.
+        """
+        print(
+            "Conta não encontrada. Deseja cadastrar um novo usuário e uma nova conta?"
+        )
+        menu_aux = menu_yes_or_no()
+        if menu_aux == "1":
+            print("=== Iniciando a criação do usuário ===")
+            nome = input("Digite o nome do usuário: ")
+            data_nascimento = input("Digite a data de nascimento (dd/mm/aaaa): ")
+            endereco = input("Digite o endereço: ")
+            try:
+                banco.criar_usuario(nome, cpf, data_nascimento, endereco)
+                print("Usuário criado com sucesso!")
+                usuario = banco.obter_usuario_por_cpf(cpf)
+                if usuario:
+                    numero_conta = len(banco.contas) + 1
+                    conta = banco.criar_conta(numero_conta, "0001", usuario)
+                    print(
+                        f"Seja bem-vindo {nome}! Conta criada com sucesso! Número: {numero_conta}"
+                    )
+                    return conta
+            except ValueError as e:
+                print(e)
+        return None
 
 class Conta:
     def __init__(self, numero, agencia, titular, saldo=0):
@@ -90,6 +124,34 @@ class Conta:
         self.extrato.append(transacao)
         print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
 
+    def saida_por_transferencia(self, valor):
+        """
+        Efetua transação de Retirada de Valor por Transferencia
+
+        Args:
+            valor (float): Valor da retirada (negativo para saque).
+
+        Returns:
+            None.
+        """
+        self._saldo -= valor
+        if valor > self._saldo:
+            raise ValueError("Saldo insuficiente.")
+        if (
+            len(
+                [
+                    t
+                    for t in self.extrato
+                    if t.tipo == "(-) Saída por Transferência" and t.data.date() == datetime.date.today()
+                ]
+            )
+            >= 3
+        ):
+            raise ValueError("Limite de saques diários atingido.")
+        transacao = Transacao(valor, "(-) Saída por Transferência", self._saldo)
+        self.extrato.append(transacao)
+        print(f"Aparece na Linha 153 Saque de R$ {valor:.2f} realizado com sucesso!")
+    
     def sacar(self, valor):
         """
         Efetua transação de saque
@@ -117,6 +179,25 @@ class Conta:
         transacao = Transacao(valor, "(-) Saque", self._saldo)
         self.extrato.append(transacao)
         print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
+        
+    def transferir(self, valor, conta_destino):
+        """
+        Transfere um valor para outra conta.
+
+        Args:
+            valor (float): Valor da transferência.
+            conta_destino (Conta): A conta de destino.
+
+        Raises:
+            ValueError: Se o saldo for insuficiente.
+        """
+        #Verifica se o saldo é maior do que a variável privada self._saldo
+        if valor > self._saldo:
+            #Se for faço vai retornar um raise informando que o saldo é insuficiente.
+            raise ValueError("Saldo insuficiente para transferência.")
+        self.saida_por_transferencia(valor)  # Usa o método saida_por_transferencia existente para debitar o valor
+        conta_destino.depositar(valor)  # Usa o método depositar existente para creditar o valor
+        print(f"Transferência de R$ {valor:.2f} para a conta {conta_destino.numero} realizada com sucesso!")
 
     def exibir_extrato(self):
         """
@@ -201,6 +282,7 @@ def menu():
     O que deseja fazer?
     [d] Depósito
     [s] Saque
+    [t] Transferência Entre Contas
     [e] Extrato
     [n] Nova Conta
     [l] Listar Contas
@@ -237,45 +319,18 @@ def main():
         if opcao == "d":
             cpf = input("Informe o CPF do usuário: ")
             conta = banco.obter_conta_por_cpf(cpf)
+            
+            if not conta:
+                conta = banco.criar_usuario_e_conta_se_necessario(cpf)
 
             if conta:
                 try:
-                    valor_deposito = float(input("Digite o valor do depósito: "))
+                    valor_deposito = float(
+                        input("Digite o valor do depósito: "))
                     conta.depositar(valor_deposito)
                 except ValueError as e:
                     print(e)
-            else:
-                print(
-                    "Conta não encontrada.Deseja cadastra um Novo Usuário e uma nova conta?"
-                )
-
-                menu_aux = menu_yes_or_no()
-
-                # Se escolher SIM crie um e uma nova conta
-                if menu_aux == "1":
-                    print("=== Iniciando a criação do usuário ===")
-                    nome = input("Digite o nome do usuário: ")
-                    cpf = cpf
-                    data_nascimento = input(
-                        "Digite a data de nascimento (dd/mm/aaaa): "
-                    )
-                    endereco = input("Digite o endereço: ")
-                    try:
-                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
-                        print("Usuário criado com sucesso!")
-                    except ValueError as e:
-                        print(e)
-
-                    # Incia o cadastro da conta
-                    usuario = banco.obter_usuario_por_cpf(cpf)
-                    if usuario:
-                        numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(numero_conta, "0001", usuario)
-                        print(
-                            f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
-                        )
-
-            conta = banco.obter_conta_por_cpf(cpf)
+            
 
         elif opcao == "s":
             cpf = input("Informe o CPF do usuário: ")
@@ -304,7 +359,8 @@ def main():
                     )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -313,12 +369,35 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
                         print(
                             f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
                         )
 
             conta = banco.obter_conta_por_cpf(cpf)
+            
+        elif opcao == "t":
+            cpf_origem = input("Informe o CPF de Origem: ")
+            conta_origem = banco.obter_conta_por_cpf(cpf_origem)
+            
+            if not conta_origem:
+                print("Conta de origem não encontrada.")
+                continue
+            
+            cpf_destino = input("Informe o CPF Destino: ")
+            conta_destino = banco.obter_conta_por_cpf(cpf_destino)
+            
+            if not conta_destino:
+                print("Conta de destino não encontrada.")
+                continue
+            valor_deposito = input("Digite o valor a ser depositado: ")
+            
+            try:
+                valor_transferencia = float(input("Digite o valor da transferência: "))
+                conta_origem.transferir(valor_transferencia, conta_destino) 
+            except ValueError as e:
+                print(e)
 
         elif opcao == "e":
             cpf = input("Informe o CPF do usuário: ")
@@ -343,7 +422,8 @@ def main():
                     )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -352,7 +432,8 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
                         print(
                             f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
                         )
@@ -362,7 +443,8 @@ def main():
         elif opcao == "u":
             nome = input("Digite o nome do usuário: ")
             cpf = input("Digite o CPF do usuário: ")
-            data_nascimento = input("Digite a data de nascimento (dd/mm/aaaa): ")
+            data_nascimento = input(
+                "Digite a data de nascimento (dd/mm/aaaa): ")
             endereco = input("Digite o endereço: ")
             try:
                 banco.criar_usuario(nome, cpf, data_nascimento, endereco)
@@ -395,7 +477,8 @@ def main():
                     )
                     endereco = input("Digite o endereço: ")
                     try:
-                        banco.criar_usuario(nome, cpf, data_nascimento, endereco)
+                        banco.criar_usuario(
+                            nome, cpf, data_nascimento, endereco)
                         print("Usuário criado com sucesso!")
                     except ValueError as e:
                         print(e)
@@ -404,7 +487,8 @@ def main():
                     usuario = banco.obter_usuario_por_cpf(cpf)
                     if usuario:
                         numero_conta = len(banco.contas) + 1
-                        conta = banco.criar_conta(numero_conta, "0001", usuario)
+                        conta = banco.criar_conta(
+                            numero_conta, "0001", usuario)
                         print(
                             f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}"
                         )
