@@ -138,17 +138,16 @@ class Transacao:
         Classe que os dados sobre as transações realizadas.
     """
     def __init__(self, valor, tipo, saldo):
-        """
-        Cria a exibição o extrato com as transaçoes do usuario
+       """
+        Inicializa um objeto Transacao com informações sobre a transação realizada.
 
         Args:
-            Valor(int): Valor de saque ou deposito de cda transaçõa
-            tipo(str): tipo da trtansçõa efetuada (saque ou deposito)
-            data(date): representa a data de cada registro
-            saldo(float): saldo final da conta
+            valor (float): Valor da transação (positivo para depósitos, negativo para saques).
+            tipo (str): Tipo da transação ("deposito" ou "saque").
+            saldo (float): Saldo da conta após a transação.
 
         Returns:
-            Não tenho argumentos.
+            None
         """
         dt_extrato = datetime.datetime.now()
         self.valor = valor
