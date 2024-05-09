@@ -148,7 +148,7 @@ class Transacao:
             saldo(float): saldo final da conta
 
         Returns:
-            não tem.
+            Não tenho argumentos.
         """
         dt_extrato = datetime.datetime.now()
         self.valor = valor
