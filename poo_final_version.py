@@ -210,8 +210,6 @@ def main():
 
             conta = banco.obter_conta_por_cpf(cpf)
 
-            
-
         elif opcao == "s":
             cpf = input("Informe o CPF do usuário: ")
             conta = banco.obter_conta_por_cpf(cpf)
@@ -253,7 +251,6 @@ def main():
                             f"Seja bem vindo {nome} Conta criada com sucesso! Número: {numero_conta}")
 
             conta = banco.obter_conta_por_cpf(cpf)
-                       
 
         elif opcao == "e":
             cpf = input("Informe o CPF do usuário: ")
