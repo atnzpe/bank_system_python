@@ -142,13 +142,13 @@ class Conta:
 
     def depositar(self, valor):
         """
-        Efetua transação deposito
+        Realiza um depósito na conta.
 
         Args:
-            valor (float): Valor da transação (positivo para depósitos).
+            valor (float): Valor a ser depositado.
 
         Returns:
-            None.
+            None
         """
         self._saldo += valor
         transacao = Transacao(valor, "(+) Deposito", self._saldo)
@@ -200,13 +200,17 @@ class Conta:
 
     def sacar(self, valor):
         """
-        Efetua transação de saque
+        Realiza um saque da conta.
 
         Args:
-            valor (float): Valor da transação (negativo para saque).
+            valor (float): Valor a ser sacado.
 
         Returns:
-            None.
+            None
+
+        Raises:
+            ValueError: Se o saldo for insuficiente ou se o limite de saques 
+                        diários for atingido.
         """
         self._saldo -= valor
         if valor > self._saldo:
@@ -253,13 +257,10 @@ class Conta:
 
     def exibir_extrato(self):
         """
-        Cria a exibição o extrato com as transaçoes do usuario
-
-        Args:
-            Não tem.
+        Exibe o extrato da conta, mostrando as transações e o saldo final.
 
         Returns:
-            usuario: usuario criado.
+            None
         """
         data = datetime.datetime.now()
         dt_extrato = data.strftime("%d/%m/%Y, %H:%M:%S")
