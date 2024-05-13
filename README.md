@@ -1,4 +1,11 @@
-# bank_system_python 
+# Sistema Bancário em Python
+
+Este projeto implementa um sistema bancário simples em Python, oferecendo funcionalidades básicas como:
+
+*Criar conta
+Depositar fundos
+Sacar fundos
+Verificar saldo
 
 ## Objetivo Geral
 
