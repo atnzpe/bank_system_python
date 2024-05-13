@@ -297,7 +297,25 @@ CPF Cliente: {self.titular.cpf}"""
 
 
 class PessoaFisica:
+    """
+    Representa uma pessoa física com seus dados pessoais.
+
+    Atributos:
+        nome (str): Nome da pessoa.
+        cpf (str): CPF da pessoa.
+        data_nascimento (str): Data de nascimento da pessoa no formato "dd/mm/aaaa".
+        endereco (str): Endereço da pessoa.
+    """
     def __init__(self, nome, cpf, data_nascimento, endereco):
+        """
+        Inicializa um novo objeto PessoaFisica.
+
+        Args:
+            nome (str): Nome da pessoa.
+            cpf (str): CPF da pessoa.
+            data_nascimento (str): Data de nascimento da pessoa no formato "dd/mm/aaaa".
+            endereco (str): Endereço da pessoa.
+        """
         self.nome = nome
         self.cpf = cpf
         self.data_nascimento = data_nascimento
